@@ -1,64 +1,46 @@
-package com.example.roomm6i1;
+package com.example.roomm6i1
 
-import android.os.Bundle;
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.fragment.app.Fragment
+import com.example.roomm6i1.databinding.FragmentAgregarBinding
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
-import androidx.fragment.app.Fragment;
 
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+class Frag_agregar : Fragment() {
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link Frag_agregar#newInstance} factory method to
- * create an instance of this fragment.
- */
-public class Frag_agregar extends Fragment {
+    lateinit var binding: FragmentAgregarBinding
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
-    public Frag_agregar() {
-        // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment Frag_agregar.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static Frag_agregar newInstance(String param1, String param2) {
-        Frag_agregar fragment = new Frag_agregar();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        binding = FragmentAgregarBinding.inflate(layoutInflater,container,false)
+        initListener()
+        return binding.root
     }
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+    private fun initListener() {
+        binding.btnAgregar.setOnClickListener {
+            val texto = binding.editText.text.toString()
+            guardarTexto(texto)
         }
     }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_agregar, container, false);
+    private fun guardarTexto(text: String) {
+        val dao = TareaBaseDatos.getDatabase(requireContext()).getTaskDao()
+        val tarea = Tarea(text, " ")
+        GlobalScope.launch { dao.insertarTareas(tarea) }
+
     }
+
+
 }
