@@ -5,13 +5,13 @@ import android.os.Bundle
 
 /*
 [ ] Navigation
- [ ] Fragmento agregar
- [ ] Fragmento listado
- [ ] Crear Interfaz
- [ ] Room
-      [ ] _Dao
-      [ ] _Base Datos
-      [ ]_Entity
+ [x] Fragmento agregar
+ [x] Fragmento listado
+ [x] Crear Interfaz
+ [x] Room
+      [x]_Entity
+      [x] _Dao
+      [x] _Base Datos
  [ ] Fragmento listado
  [ ] RecyclerView
  */
