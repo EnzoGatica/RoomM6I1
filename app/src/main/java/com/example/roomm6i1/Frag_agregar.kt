@@ -14,6 +14,7 @@ import kotlinx.coroutines.launch
 class Frag_agregar : Fragment() {
 
     lateinit var binding: FragmentAgregarBinding
+    lateinit var repositorio: Repositorio
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,33 +26,39 @@ class Frag_agregar : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentAgregarBinding.inflate(layoutInflater,container,false)
+        initRepositorio()
         initListener()
         cargarTareas()
         return binding.root
+    }
+
+    private fun initRepositorio() {
+        repositorio = Repositorio(TareaBaseDatos.getDatabase(requireContext()).getTaskDao())
     }
 
     private fun initListener() {
         binding.btnAgregar.setOnClickListener {
             val texto = binding.editText.text.toString()
             guardarTexto(texto)
+            binding.editText.setText("")
             Toast.makeText(requireContext(), "Se a agregado un texto", Toast.LENGTH_SHORT).show()
         }
     }
 
     private fun guardarTexto(text: String) {
-        val dao = TareaBaseDatos.getDatabase(requireContext()).getTaskDao()
+
         val tarea = Tarea(text, " ")
-        GlobalScope.launch { dao.insertarTareas(tarea) }
+        GlobalScope.launch { repositorio.insertTask(tarea) }
 
     }
 
     private fun cargarTareas(){
-        val dao = TareaBaseDatos.getDatabase(requireContext()).getTaskDao()
-        GlobalScope.launch{
-            val tareas = dao.getTareas()// recuperar la tarea
-            val tareaAText = tareas.joinToString("\n") { it.nombre } // convierte el formato
+
+        repositorio.getTareas().observe(requireActivity()){
+            val tareaAText = it.joinToString("\n") { it.nombre } // convierte el formato
             binding.textView.text = tareaAText // asigna los datos
-        }
+        }  // recuperar la tarea
+
 
     }
 
